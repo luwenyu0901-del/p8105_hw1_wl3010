@@ -60,4 +60,99 @@ p
 ``` r
 # save plot to file
 ggsave("scatterplot_temp_time.png", plot = p, width = 7, height = 5)
+
+
+
+
+## Problem 2
+
+library(tidyverse)
 ```
+
+    ## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+    ## ✔ dplyr     1.1.4     ✔ readr     2.1.5
+    ## ✔ forcats   1.0.0     ✔ stringr   1.5.1
+    ## ✔ lubridate 1.9.4     ✔ tibble    3.3.0
+    ## ✔ purrr     1.1.0     ✔ tidyr     1.3.1
+    ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+    ## ✖ dplyr::filter() masks stats::filter()
+    ## ✖ dplyr::lag()    masks stats::lag()
+    ## ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+
+``` r
+set.seed(123)
+
+# 创建四类变量
+num_var <- rnorm(10)                           # 数值型
+log_var <- num_var > 0                         # 逻辑型
+char_var <- letters[1:10]                      # 字符型
+fac_var <- factor(rep(c("A","B","C"), length.out = 10)) # 因子型
+
+# 合并到数据框
+df <- data.frame(
+  num_var = num_var,
+  log_var = log_var,
+  char_var = char_var,
+  fac_var = fac_var
+)
+
+df
+```
+
+    ##        num_var log_var char_var fac_var
+    ## 1  -0.56047565   FALSE        a       A
+    ## 2  -0.23017749   FALSE        b       B
+    ## 3   1.55870831    TRUE        c       C
+    ## 4   0.07050839    TRUE        d       A
+    ## 5   0.12928774    TRUE        e       B
+    ## 6   1.71506499    TRUE        f       C
+    ## 7   0.46091621    TRUE        g       A
+    ## 8  -1.26506123   FALSE        h       B
+    ## 9  -0.68685285   FALSE        i       C
+    ## 10 -0.44566197   FALSE        j       A
+
+``` r
+mean(pull(df, num_var))   # 可以，正常平均值
+```
+
+    ## [1] 0.07462564
+
+``` r
+mean(pull(df, log_var))   # 可以，TRUE=1, FALSE=0，结果是比例
+```
+
+    ## [1] 0.5
+
+``` r
+# mean(pull(df, char_var)) # 会报错，字符无法取均值
+# mean(pull(df, fac_var))  # 会报错，因子无法直接取均值
+as.numeric(pull(df, log_var))    # TRUE/FALSE 转为 1/0
+```
+
+    ##  [1] 0 0 1 1 1 1 1 0 0 0
+
+``` r
+as.numeric(pull(df, char_var))   # 字符转数值，报 NA
+```
+
+    ## Warning: NAs introduced by coercion
+
+    ##  [1] NA NA NA NA NA NA NA NA NA NA
+
+``` r
+as.numeric(pull(df, fac_var))    # 因子转内部编码 (A=1, B=2, C=3)
+```
+
+    ##  [1] 1 2 3 1 2 3 1 2 3 1
+
+``` r
+mean(as.numeric(pull(df, log_var)))   # 合理，相当于比例
+```
+
+    ## [1] 0.5
+
+``` r
+mean(as.numeric(pull(df, fac_var)))   # 有值，但仅代表编码平均，没有实际意义
+```
+
+    ## [1] 1.9
