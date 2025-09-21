@@ -82,13 +82,11 @@ library(tidyverse)
 ``` r
 set.seed(123)
 
-# 创建四类变量
-num_var <- rnorm(10)                           # 数值型
-log_var <- num_var > 0                         # 逻辑型
-char_var <- letters[1:10]                      # 字符型
-fac_var <- factor(rep(c("A","B","C"), length.out = 10)) # 因子型
+num_var <- rnorm(10)                           
+log_var <- num_var > 0                         
+char_var <- letters[1:10]                      
+fac_var <- factor(rep(c("A","B","C"), length.out = 10)) 
 
-# 合并到数据框
 df <- data.frame(
   num_var = num_var,
   log_var = log_var,
@@ -112,27 +110,25 @@ df
     ## 10 -0.44566197   FALSE        j       A
 
 ``` r
-mean(pull(df, num_var))   # 可以，正常平均值
+mean(pull(df, num_var))   
 ```
 
     ## [1] 0.07462564
 
 ``` r
-mean(pull(df, log_var))   # 可以，TRUE=1, FALSE=0，结果是比例
+mean(pull(df, log_var))  
 ```
 
     ## [1] 0.5
 
 ``` r
-# mean(pull(df, char_var)) # 会报错，字符无法取均值
-# mean(pull(df, fac_var))  # 会报错，因子无法直接取均值
-as.numeric(pull(df, log_var))    # TRUE/FALSE 转为 1/0
+as.numeric(pull(df, log_var))   
 ```
 
     ##  [1] 0 0 1 1 1 1 1 0 0 0
 
 ``` r
-as.numeric(pull(df, char_var))   # 字符转数值，报 NA
+as.numeric(pull(df, char_var))   
 ```
 
     ## Warning: NAs introduced by coercion
@@ -140,19 +136,19 @@ as.numeric(pull(df, char_var))   # 字符转数值，报 NA
     ##  [1] NA NA NA NA NA NA NA NA NA NA
 
 ``` r
-as.numeric(pull(df, fac_var))    # 因子转内部编码 (A=1, B=2, C=3)
+as.numeric(pull(df, fac_var))    
 ```
 
     ##  [1] 1 2 3 1 2 3 1 2 3 1
 
 ``` r
-mean(as.numeric(pull(df, log_var)))   # 合理，相当于比例
+mean(as.numeric(pull(df, log_var)))  
 ```
 
     ## [1] 0.5
 
 ``` r
-mean(as.numeric(pull(df, fac_var)))   # 有值，但仅代表编码平均，没有实际意义
+mean(as.numeric(pull(df, fac_var)))   
 ```
 
     ## [1] 1.9
